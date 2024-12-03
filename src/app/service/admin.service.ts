@@ -5,18 +5,21 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Admin } from '../model/admin.model';
+import { environment } from '../environment/environment';
+
+const NAV_URL = environment.apiUrl
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminService {
-  private baseUrl = 'http://localhost:8080/api/admin'; // Backend API URL
+  // private baseUrl = 'http://localhost:8080/api/admin'; // Backend API URL
   adminNameSubject: any;
 
   constructor(private http: HttpClient) {}
 
   registerAdmin(admin: Admin): Observable<any> {
-    return this.http.post(`${this.baseUrl}/registerAdmin `,admin);
+    return this.http.post(`${NAV_URL}/admin/registerAdmin `,admin);
   }
 
 
@@ -28,7 +31,7 @@ export class AdminService {
    * @returns Observable<string>
    */
   loginAdmin(username: string, password: string): Observable<Admin> {
-    return this.http.post<Admin>(`${this.baseUrl}/loginAdmin`, { username, password });
+    return this.http.post<Admin>(`${NAV_URL}/admin/loginAdmin`, { username, password });
   }
 
 
@@ -38,7 +41,7 @@ export class AdminService {
    * @returns Observable<Admin>
    */
   getAdminById(adminId: number): Observable<Admin> {
-    return this.http.get<Admin>(`${this.baseUrl}/get/${adminId}`).pipe(
+    return this.http.get<Admin>(`${NAV_URL}/admin/get/${adminId}`).pipe(
       catchError(this.handleError('getAdminById'))
     );
   }
@@ -76,12 +79,12 @@ export class AdminService {
   }
 
   postJob(adminId: number, job: any): Observable<string> {
-    const url = `${this.baseUrl}/JobPost/${adminId}`;
+    const url = `${NAV_URL}/admin/JobPost/${adminId}`;
     return this.http.post<string>(url, job).pipe(catchError(this.handleErrors));
   }
 
   postInternship(adminId: number, internship: any): Observable<string> {
-    const url = `${this.baseUrl}/postInternship/${adminId}`;
+    const url = `${NAV_URL}/admin/postInternship/${adminId}`;
     return this.http.post<string>(url, internship).pipe(catchError(this.handleErrors));
   }
 }

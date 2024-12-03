@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, map, Observable, throwError } from 'rxjs';
 import { User } from '../model/user';
+import { environment } from '../environment/environment';
 
-
+const NAV_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:8080/api/users';
+  // private baseUrl = 'http://localhost:8080/api/users';
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken()); // Initialized with token check
   isLoggedIn$ = this.isLoggedInSubject.asObservable(); // Expose as observable to subscribe to login status
@@ -19,7 +20,7 @@ export class UserService {
   // Register a new user
   registerUser(user: User): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(`${this.baseUrl}/user/register`, user, { headers, responseType: 'text' })
+    return this.http.post(`${NAV_URL}/users/user/register`, user, { headers, responseType: 'text' })
       .pipe(
         map((response: string) => {
           console.log('Registration response:', response);
@@ -39,7 +40,7 @@ export class UserService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { userName, password };
 
-    return this.http.post(`${this.baseUrl}/user/login`, body, { headers, responseType: 'text' })
+    return this.http.post(`${NAV_URL}/users/user/login`, body, { headers, responseType: 'text' })
       .pipe(
         map((response: string) => {
           console.log('Login response:', response);
@@ -58,7 +59,7 @@ export class UserService {
 
   // Fetch all users
   getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.baseUrl}/getAllUsers`)
+    return this.http.get<User[]>(`${NAV_URL}/users/getAllUsers`)
       .pipe(
         catchError((error) => {
           console.error('Failed to fetch users', error);

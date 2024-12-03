@@ -2,28 +2,30 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Job } from '../model/job.model';
+import { environment } from '../environment/environment';
 
+const NAV_URL = environment.apiUrl;
 
 @Injectable({
   providedIn: 'root',
 })
 export class JobService {
-  private apiUrl = 'http://localhost:8080/api/jobs';
+  // private apiUrl = 'http://localhost:8080/api/jobs';
 
   constructor(private http: HttpClient) {}
 
   getJobById(id: number): Observable<Job> {
-    return this.http.get<Job>(`${this.apiUrl}/getJobById/${id}`);
+    return this.http.get<Job>(`${NAV_URL}/jobs/getJobById/${id}`);
   }
 
 
   getAllJobs(): Observable<Job[]> {
-    return this.http.get<Job[]>(`${this.apiUrl}/getAllJobs`);
+    return this.http.get<Job[]>(`${NAV_URL}/jobs/getAllJobs`);
   }
 
 
   saveJob(adminId: number, job: Job): Observable<Job> {
-    return this.http.post<Job>(`${this.apiUrl}/saveJob/${adminId}`, job);
+    return this.http.post<Job>(`${NAV_URL}/jobs/saveJob/${adminId}`, job);
   }
 
   searchJobs(searchParams: any): Observable<Job[]> {
@@ -36,18 +38,18 @@ export class JobService {
       }
     });
 
-    return this.http.get<Job[]>(`${this.apiUrl}/searchJobs`, { params });
+    return this.http.get<Job[]>(`${NAV_URL}/jobs/searchJobs`, { params });
   }
 
   // Other method examples for any other API requests if required (e.g., delete job, etc.)
   deleteJob(jobId: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/deleteJob/${jobId}`);
+    return this.http.delete(`${NAV_URL}/jobs/deleteJob/${jobId}`);
   }
 
   updateJob(id: number, job: Job): Observable<Job> {
-    return this.http.put<Job>(`${this.apiUrl}/updateJob/${id}`, job);
+    return this.http.put<Job>(`${NAV_URL}/jobs/updateJob/${id}`, job);
   }
    getJobsByAdmin(adminId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/getJobsByAdmin/${adminId}`);
+    return this.http.get<any[]>(`${NAV_URL}/jobs/getJobsByAdmin/${adminId}`);
   }
 }
