@@ -1,6 +1,7 @@
 // internship.component.ts
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AdminService } from 'src/app/service/admin.service';
 import { InternshipService } from 'src/app/service/service-internship.service';
 
 
@@ -15,7 +16,7 @@ export class InternshipComponent implements OnInit {
   selectedInternship: any = null;
   adminId = 1; // Example admin ID; dynamically adjust this
 
-  constructor(private fb: FormBuilder, private internshipService: InternshipService) {}
+  constructor(private fb: FormBuilder, private internshipService: InternshipService, private adminService: AdminService) {}
 
   ngOnInit(): void {
     this.internshipForm = this.fb.group({
@@ -46,9 +47,10 @@ export class InternshipComponent implements OnInit {
 
   createInternship(): void {
     if (this.internshipForm.valid) {
-      this.internshipService.createInternship(this.internshipForm.value, this.adminId).subscribe(() => {
+      const internshipData = this.internshipForm.value;
+      this.adminService.postInternship(this.adminId, internshipData).subscribe(() => {
         this.fetchInternships();
-        this.internshipForm.reset();
+        this.resetForm();
       });
     }
   }

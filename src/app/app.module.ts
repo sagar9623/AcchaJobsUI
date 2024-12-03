@@ -22,7 +22,7 @@ import { RegisterComponent } from './component/register/register.component';
 import { UserlistComponent } from './component/userlist/userlist.component';
 import { ViewAllInternshipComponent } from './component/view-all-internship/view-all-internship.component';
 import { SaveJobComponent } from './component/save-job/save-job.component';
-import { ViellAllJobsComponent } from './component/viell-all-jobs/viell-all-jobs.component';
+import { ViellAllJobsComponent } from './component/view-all-jobs/viell-all-jobs.component';
 import { JobspostsComponent } from './component/jobsposts/jobsposts.component';
 import { FaqsComponent } from './component/faqs/faqs.component';
 import { InternshipDetailsComponent } from './component/internship-details/internship-details.component';
@@ -32,8 +32,8 @@ import { ApplyInternshipComponent } from './component/apply-internship/apply-int
 import { ViewAllFormsAdminComponent } from './component/view-all-forms-admin/view-all-forms-admin.component';
 import { UserhomepageComponent } from './component/userhomepage/userhomepage.component';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { SuperAdminComponent } from './component/super-admin/super-admin/super-admin.component';
 import { AdminregisterComponent } from './component/adminregister/adminregister/adminregister.component';
+import { SuperAdminComponent } from './component/super-admin/super-admin.component';
 
 
 
@@ -69,6 +69,8 @@ import { AdminregisterComponent } from './component/adminregister/adminregister/
     ViewAllFormsAdminComponent,
     UserhomepageComponent,
     SuperAdminComponent,
+
+
 
   ],
   imports: [

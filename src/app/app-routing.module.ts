@@ -19,7 +19,7 @@ import { RegisterComponent } from './component/register/register.component';
 import { UserlistComponent } from './component/userlist/userlist.component';
 import { ViewAllInternshipComponent } from './component/view-all-internship/view-all-internship.component';
 import { SaveJobComponent } from './component/save-job/save-job.component';
-import { ViellAllJobsComponent } from './component/viell-all-jobs/viell-all-jobs.component';
+import { ViellAllJobsComponent } from './component/view-all-jobs/viell-all-jobs.component';
 import { JobspostsComponent } from './component/jobsposts/jobsposts.component';
 import { FaqsComponent } from './component/faqs/faqs.component';
 import { InternshipDetailsComponent } from './component/internship-details/internship-details.component';
@@ -28,8 +28,9 @@ import { ApplyJobComponent } from './component/apply-job/apply-job.component';
 import { ApplyInternshipComponent } from './component/apply-internship/apply-internship.component';
 import { ViewAllFormsAdminComponent } from './component/view-all-forms-admin/view-all-forms-admin.component';
 import { UserhomepageComponent } from './component/userhomepage/userhomepage.component';
-import { SuperAdminComponent } from './component/super-admin/super-admin/super-admin.component';
 import { AdminregisterComponent } from './component/adminregister/adminregister/adminregister.component';
+import { SuperAdminComponent } from './component/super-admin/super-admin.component';
+
 
 
 const routes: Routes = [
@@ -63,8 +64,7 @@ const routes: Routes = [
   {path:'view-all-forms-admin',component:ViewAllFormsAdminComponent},
   // { path: '**', redirectTo: '' } ,
   {path:'userhomepage',component:UserhomepageComponent},
-  {path:'super-admin', component:SuperAdminComponent}
-
+  {path:'super-admin', component:SuperAdminComponent},
 
 
 ];

@@ -22,6 +22,18 @@ export class SuperAdminService {
     return this.http.post<any>(`${this.apiUrl}/disableAdmin/${adminId}`, {});
   }
 
+  // Post management
+  getAllPendingPosts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/getAllPendingPosts`);
+  }
+
+  approvePost(postId: number, isApproved: boolean): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/approvePost/${postId}?isApproved=${isApproved}`, {});
+  }
+
+  disapprovePost(postId: number): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/disapprovePost/${postId}`, {});
+  }
 
   // setPremiumPrice(adminId: number, price: number): Observable<void> {
   //   return this.http.put<void>(`${this.apiUrl}/setPremiumPrice/${adminId}`, { price });

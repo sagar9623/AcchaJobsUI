@@ -50,8 +50,4 @@ export class JobService {
    getJobsByAdmin(adminId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/getJobsByAdmin/${adminId}`);
   }
-
-  getInternshipsByAdmin(adminId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/getInternshipsByAdmin/${adminId}`);
-  }
 }
