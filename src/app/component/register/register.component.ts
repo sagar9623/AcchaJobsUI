@@ -7,7 +7,7 @@ import { UserService } from 'src/app/service/user.service';
 
 
 
-@Component({     
+@Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
@@ -21,22 +21,30 @@ export class RegisterComponent {
   ) {
     this.registerForm = this.formBuilder.group({
       fullName: ['', Validators.required],
-      userName: ['', Validators.required],
-      emailId: ['', [Validators.required, Validators.email]],
-      gender: ['', Validators.required],
-      mobileNo: ['', [Validators.required, Validators.pattern("^[0-9]{10}$")]],
-      password: ['', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$")
-      ]],
-      confirmPassword: ['', Validators.required],
-      terms: [false, Validators.requiredTrue]
-    }, {
-      validator: this.matchPasswords('password', 'confirmPassword')
-    });
+        userName: ['', Validators.required],
+        emailId: ['', [Validators.required, Validators.email]],
+        gender: ['', Validators.required],
+        mobileNo: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(
+              '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,}$'
+            )
+          ]
+        ],
+        confirmPassword: ['', Validators.required],
+        terms: [false, Validators.requiredTrue]
+      },
+      {
+        validator: this.matchPasswords('password', 'confirmPassword')
+      }
+    );
   }
 
+  // Validator to match passwords
   matchPasswords(password: string, confirmPassword: string) {
     return (formGroup: FormGroup) => {
       const passwordControl = formGroup.controls[password];
@@ -54,33 +62,37 @@ export class RegisterComponent {
     };
   }
 
-  onSubmit() {
-    this.submitted = true;
-  
-    if (this.registerForm.invalid) {
-      return;
-    }
-  
-    const user = new User(this.registerForm.value); // Pass form values to the constructor
-  
-    this.userService.registerUser(user).subscribe(
-      response => {
-        if (response.success) {
-          alert(response.message); // Show success message
-          this.router.navigate(['/login']);
-        } else {
-          alert(response.message); // Show failure message
-        }
-    
-      },
-      error => {
-        alert('Registration failed. Please try again later.');
-        console.error('Error:', error);
-      }
-    );
-  }
-  
+  errorMessage = ''; // Define this variable in your component
 
+onSubmit() {
+  this.submitted = true;
+
+  if (this.registerForm.invalid) {
+    return;
+  }
+
+  const user = new User(this.registerForm.value);
+
+  this.userService.registerUser(user).subscribe(
+    response => {
+      this.errorMessage = ''; // Clear any previous error messages
+      alert(response.message); // Success message
+      this.router.navigate(['/login']);
+    },
+    error => {
+      if (typeof error === 'string') {
+        // this.errorMessage = error; // Show the backend error message
+        alert(error);
+      } else {
+        this.errorMessage = 'An unexpected error occurred. Please try again later.';
+      }
+      console.error('Error:', error);
+    }
+  );
+}
+
+
+  // Getter for form controls
   get f() {
     return this.registerForm.controls;
   }

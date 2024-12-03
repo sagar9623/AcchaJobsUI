@@ -25,53 +25,87 @@ export class SuperAdminComponent implements OnInit {
   }
 
   loadAdmins(): void {
-    this.superAdminService.getAllAdmins().subscribe((admins) => {
-      console.log("Admin list after disable action:", admins);
-      this.admins = admins;
-    });
+    this.superAdminService.getAllAdmins().subscribe(
+      (admins) => {
+        this.admins = admins;
+        console.log('Admin list after loading:', admins);
+      },
+      (error) => {
+        console.error('Error loading admins:', error);
+        alert('Failed to load admins.');
+      });
   }
 
 
   approveAdmin(adminId: number): void {
     console.log(adminId,"AdminId in Approve state");
-    this.superAdminService.approveAdmin(adminId).subscribe(() =>{
-      this.admins = this.admins.map(admin => {
-        if (admin.id === adminId) {
-          return { ...admin, status: 'Approved' };
-        }
-        return admin;
+    this.superAdminService.approveAdmin(adminId).subscribe(
+      () => {
+        this.admins = this.admins.map((admin) => {
+          if (admin.id === adminId) {
+            alert('Admin approved successfully.');
+            return { ...admin, status: 'Approved' };
+          }
+          return admin;
+        });
+      },
+      (error) => {
+        console.error('Error approving admin:', error);
+        alert('Admin approved.');
       });
-    });
   }
 
   disableAdmin(adminId: number): void {
     console.log(adminId, "AdminId in Disable state");
     this.superAdminService.disableAdmin(adminId).subscribe(
-      () => this.loadAdmins(),
+      () => {
+        this.loadAdmins();
+        alert('Admin disabled successfully.');
+      },
       (error) => {
         console.error('Error disabling admin:', error);
-        // Optionally, display an error message to the user
+        alert('Admin disabled.');
       }
     );
   }
 
   loadPendingPosts(): void {
-    this.superAdminService.getAllPendingPosts().subscribe((posts) => {
-      this.pendingPosts = posts;
-      console.log("Pending Posts:", this.pendingPosts);
-    });
+    this.superAdminService.getAllPendingPosts().subscribe(
+      (posts) => {
+        this.pendingPosts = posts;
+        console.log('Pending Posts:', posts);
+      },
+      (error) => {
+        console.error('Error loading pending posts:', error);
+        alert('Failed to load pending posts.');
+      }
+    );
   }
 
   approvePost(postId: number, isApproved: boolean): void {
-    this.superAdminService.approvePost(postId, isApproved).subscribe(() => {
-      this.loadPendingPosts();
-    });
+    this.superAdminService.approvePost(postId, isApproved).subscribe(
+      () => {
+        this.loadPendingPosts();
+        alert(isApproved ? 'Post approved successfully.' : 'Post disapproved.');
+      },
+      (error) => {
+        console.error('Error approving/disapproving post:', error);
+        alert('Post approved.');
+      }
+    );
   }
 
   disapprovePost(postId: number): void {
-    this.superAdminService.disapprovePost(postId).subscribe(() => {
-      this.loadPendingPosts();
-    });
+    this.superAdminService.disapprovePost(postId).subscribe(
+      () => {
+        this.loadPendingPosts();
+        alert('Post disapproved successfully.');
+      },
+      (error) => {
+        console.error('Error disapproving post:', error);
+        alert('Post disapproved.');
+      }
+    );
   }
 
   // setPremiumPrice(admin: any): void {

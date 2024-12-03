@@ -10,33 +10,31 @@ import { User } from '../model/user';
 })
 export class UserService {
   private baseUrl = 'http://localhost:8080/api/users';
-  
+
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken()); // Initialized with token check
   isLoggedIn$ = this.isLoggedInSubject.asObservable(); // Expose as observable to subscribe to login status
 
   constructor(private http: HttpClient) { }
 
-  // Method to register a new user
+  // Register a new user
   registerUser(user: User): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(`${this.baseUrl}/user/register`, user, { headers, responseType: 'text' })
       .pipe(
         map((response: string) => {
           console.log('Registration response:', response);
-          if (response === 'User registered successfully.') {
-            return { success: true, message: response };
-          } else {
-            return { success: false, message: 'Registration failed. Please try again.' };
-          }
+          return { success: true, message: response };
         }),
         catchError((error) => {
           console.error('Registration failed', error);
-          return throwError(() => new Error('Registration failed. Please try again later.'));
+          // Return the specific error message if available, otherwise return a generic message
+          const errorMessage = error.error || 'Registration failed. Please try again later.';
+          return throwError(() => errorMessage);
         })
       );
   }
 
-  // Method to login user
+  // Login user
   loginUser(userName: string, password: string): Observable<string> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = { userName, password };
@@ -46,46 +44,47 @@ export class UserService {
         map((response: string) => {
           console.log('Login response:', response);
           if (response === 'Login successful.') {
-            this.setLoggedIn(true);  // Update the login status on successful login
+            this.setLoggedIn(true);
           }
           return response;
         }),
         catchError((error) => {
           console.error('Login failed', error);
-          return throwError(() => new Error('Login failed. Please try again later.'));
+          const errorMessage = error.error || 'Login failed. Please try again later.';
+          return throwError(() => errorMessage);
         })
       );
   }
 
-  // Method to fetch all users
+  // Fetch all users
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.baseUrl}/getAllUsers`)
       .pipe(
         catchError((error) => {
           console.error('Failed to fetch users', error);
-          return throwError(() => new Error('Failed to fetch users. Please try again later.'));
+          return throwError(() => 'Failed to fetch users. Please try again later.');
         })
       );
   }
 
-  // Utility method to check if user is already logged in
+  // Check if user is logged in
   private hasToken(): boolean {
-    return !!localStorage.getItem('currentUser');  // Check if token exists in localStorage
+    return !!localStorage.getItem('currentUser');
   }
 
-  // Update logged-in status and store it in localStorage
+  // Update logged-in status
   private setLoggedIn(status: boolean): void {
-    this.isLoggedInSubject.next(status);  // Update the BehaviorSubject
+    this.isLoggedInSubject.next(status);
     if (status) {
-      localStorage.setItem('currentUser', 'loggedIn');  // Save to localStorage if logged in
+      localStorage.setItem('currentUser', 'loggedIn');
     } else {
-      localStorage.removeItem('currentUser');  // Remove from localStorage if logged out
+      localStorage.removeItem('currentUser');
     }
   }
 
   // Logout user
   logout(): void {
     console.log('Logging out...');
-    this.setLoggedIn(false);  // Update login status to false
+    this.setLoggedIn(false);
   }
 }

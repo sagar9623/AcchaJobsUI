@@ -1,7 +1,8 @@
 // internship.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';  // Import throwError from rxjs
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,16 @@ export class InternshipService {
 
   getInternshipsByAdmin(adminId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/getInternshipsByAdmin/${adminId}`);
+  }
+   // New method to fetch internships by adminId
+   getInternshipsByAdminId(adminId: number): Observable<any[]> {
+    const url = `${this.apiUrl}/getInternshipsByAdmin/${adminId}`;
+    return this.http.get<any[]>(url).pipe(catchError(this.handleErrors));
+  }
+
+  // Error handler for HTTP requests
+  private handleErrors(error: any): Observable<any> {
+    console.error('An error occurred:', error);
+    return throwError(() => new Error(error));  // Use throwError here
   }
 }

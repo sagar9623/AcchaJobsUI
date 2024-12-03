@@ -14,7 +14,8 @@ export class InternshipComponent implements OnInit {
   internshipForm!: FormGroup;
   internships: any[] = [];
   selectedInternship: any = null;
-  adminId = 1; // Example admin ID; dynamically adjust this
+  adminId: number = 0; // Initially null
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private internshipService: InternshipService, private adminService: AdminService) {}
 
@@ -36,18 +37,43 @@ export class InternshipComponent implements OnInit {
       perks: [''],
       companyDescription: [''],
     });
-    this.fetchInternships();
+    // Retrieve adminId from localStorage after login
+    const storedAdminId = localStorage.getItem('adminId');
+    if (storedAdminId) {
+      this.adminId = parseInt(storedAdminId, 10); // Convert to number
+      this.fetchInternships();
+    } else {
+      // Handle case where adminId is not available, e.g., redirect to login page
+      this.errorMessage = 'You must be logged in to manage jobs.';
+      // Optionally redirect to the login page
+      // this.router.navigate(['/login']);
+    }
+
+    console.log("AdminID:@@@@@@@@@@@@@@@",this.adminId);
   }
 
+  // Update fetchInternships to use the method that fetches internships by adminId
   fetchInternships(): void {
-    this.internshipService.getAllInternships().subscribe((data) => {
-      this.internships = data;
-    });
+    if (this.adminId) {
+      this.internshipService.getInternshipsByAdminId(this.adminId).subscribe(
+        (data) => {
+          this.internships = data;
+          console.log('No insternship Fetch');
+        },
+        (error) => {
+          this.errorMessage = 'Error fetching internships. Please try again later.';
+          console.error('Error fetching internships: ', error);
+        }
+      );
+    } else {
+      this.errorMessage = 'Admin ID is not set.';
+    }
   }
 
   createInternship(): void {
     if (this.internshipForm.valid) {
       const internshipData = this.internshipForm.value;
+      alert('Waiting for Super-Admin Approvel');
       this.adminService.postInternship(this.adminId, internshipData).subscribe(() => {
         this.fetchInternships();
         this.resetForm();
@@ -62,6 +88,7 @@ export class InternshipComponent implements OnInit {
 
   updateInternship(): void {
     if (this.selectedInternship && this.internshipForm.valid) {
+      alert('Post Updated Successfully');
       this.internshipService.updateInternship(this.selectedInternship.id, this.internshipForm.value).subscribe(() => {
         this.fetchInternships();
         this.internshipForm.reset();
@@ -71,6 +98,7 @@ export class InternshipComponent implements OnInit {
   }
 
   deleteInternship(id: number): void {
+    alert('Post Deleted Successfully');
     this.internshipService.deleteInternship(id).subscribe(() => {
       this.fetchInternships();
     });

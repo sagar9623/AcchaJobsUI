@@ -61,7 +61,7 @@ export class ApplyJobComponent implements OnInit {
 
       this.applyJobService.submitApplication(this.jobId, formData).subscribe(
         () => {
-     
+
           alert('Failed to submit application. Please try again.');
           this.router.navigate(['/']);
         },

@@ -143,6 +143,7 @@ export class SaveJobComponent {
     this.jobService.deleteJob(id).subscribe({
       next: () => {
         this.successMessage = 'Job deleted successfully!';
+        alert('Job Deleted Successfully');
         // this.loadJobs(this.adminId);
         setTimeout(() => {
           this.successMessage = null;
