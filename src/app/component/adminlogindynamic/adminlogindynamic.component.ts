@@ -56,6 +56,8 @@ export class AdminlogindynamicComponent {
 
           // Save the admin ID to localStorage
           localStorage.setItem('adminId', adminId.toString());
+          // Show alert on successful login
+        alert(`Welcome, Admin! You have successfully logged in.`);
 
           // Navigate to the next page (e.g., save-job page)
           this.router.navigate(['/save-job']);

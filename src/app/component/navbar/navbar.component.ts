@@ -118,6 +118,7 @@ export class NavbarComponent {
 
   logout(): void {
     this.userservice.logout();
+    alert('Logout Successfully.')
     this.router.navigate(['/']);
   }
 }

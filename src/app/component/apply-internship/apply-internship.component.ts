@@ -65,7 +65,7 @@ export class ApplyInternshipComponent {
           this.router.navigate(['/']);  // Redirect to homepage or a success page
         },
         (error) => {
-          alert('Application submitted successfully!');
+          alert('Application not submitted.');
           console.error(error);
         }
       );

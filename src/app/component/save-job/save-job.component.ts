@@ -140,15 +140,17 @@ export class SaveJobComponent {
       return;
     }
 
-    this.jobService.deleteJob(id).subscribe({
-      next: () => {
+    const confirmed = window.confirm('Are you sure you want to delete this job?');
+    if (!confirmed) {
+      return;
+    }
+
+    this.adminService.deleteJob(this.adminId, id).subscribe({
+      next: (response) => {
+        console.log('Job deleted successfully:', response);
         this.successMessage = 'Job deleted successfully!';
         alert('Job Deleted Successfully');
-        // this.loadJobs(this.adminId);
-        setTimeout(() => {
-          this.successMessage = null;
-          window.location.reload(); // Reload the page after success message disappears
-        }, 3000); // Reload after 3 seconds
+        this.jobs = this.jobs.filter((job) => job.id !== id);
       },
       error: (error) => {
         console.error('Error deleting job:', error);

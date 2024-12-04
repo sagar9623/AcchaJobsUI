@@ -87,4 +87,9 @@ export class AdminService {
     const url = `${NAV_URL}/admin/postInternship/${adminId}`;
     return this.http.post<string>(url, internship).pipe(catchError(this.handleErrors));
   }
+
+  deleteJob(adminId: number, postId: number): Observable<string> {
+    const url = `${NAV_URL}/admin/deleteJobPost/${adminId}/${postId}`;
+    return this.http.delete(url, { responseType: 'text' });  // Specify responseType as 'text'
+  }
 }

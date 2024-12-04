@@ -43,7 +43,7 @@ export class JobService {
 
   // Other method examples for any other API requests if required (e.g., delete job, etc.)
   deleteJob(jobId: number): Observable<any> {
-    return this.http.delete(`${NAV_URL}/jobs/deleteJob/${jobId}`);
+    return this.http.delete(`${NAV_URL}/jobs/deleteJobById/${jobId}`);
   }
 
   updateJob(id: number, job: Job): Observable<Job> {

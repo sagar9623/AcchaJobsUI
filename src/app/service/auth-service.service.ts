@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +15,7 @@ export class AuthServiceService {
 
   login(username: string, password: string): boolean {
     console.log('Login attempt:', username, password); // Debugging login attempt
-    if (username === 'user' && password === 'password') {  
+    if (username === 'user' && password === 'password') {
       this.isLoggedInSubject.next(true);
       return true;
     }
