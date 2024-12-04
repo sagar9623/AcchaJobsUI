@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/service/auth-service.service';
 import * as bootstrap from 'bootstrap';
@@ -10,11 +10,13 @@ import { UserService } from 'src/app/service/user.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, AfterViewInit{
 
   isNavbarOpen = false;
-  userData: any = null;
+  // userData: any = null;
   isLoggedIn = true;  // Track login status
+  dropdownOpen: any = null;
+  isMobile: boolean = false;
 
 
     navItems = [
@@ -84,24 +86,60 @@ export class NavbarComponent {
 
     constructor(private router: Router, private userservice: UserService) {}
 
-  ngOnInit(): void {
-    // Subscribe to authentication status changes
-    this.userservice.isLoggedIn$.subscribe((isLoggedIn: boolean) => {
-      this.isLoggedIn = isLoggedIn;
-    });
-  }
+    ngOnInit(): void {
+      this.userservice.isLoggedIn$.subscribe((status) => {
+        this.isLoggedIn = status;
+      });
 
-  ngAfterViewInit(): void {
-    // Initialize Bootstrap dropdowns if needed
-    const dropdownElement = document.getElementById('navbarDropdown');
-    if (dropdownElement) {
-      new bootstrap.Dropdown(dropdownElement);
+      // Initial check for mobile mode
+      this.checkMobileMode();
     }
-  }
 
-  toggleNavbar() {
-    this.isNavbarOpen = !this.isNavbarOpen;
-  }
+    ngAfterViewInit(): void {
+      const dropdownElement = document.getElementById('navbarDropdown');
+      if (dropdownElement) {
+        new bootstrap.Dropdown(dropdownElement);
+      }
+    }
+
+    // Toggle mobile navbar on button click
+    toggleNavbar() {
+      if (this.isMobile) {
+        this.isNavbarOpen = !this.isNavbarOpen;
+      }
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+      this.checkMobileMode();
+    }
+
+    checkMobileMode() {
+      this.isMobile = window.innerWidth <= 768;
+    }
+
+    toggleDropdown(item: any, event: MouseEvent | null = null) {
+      if (event) {
+        event.stopPropagation();
+      }
+      if (this.dropdownOpen === item) {
+        this.dropdownOpen = null;
+      } else {
+        this.dropdownOpen = item;
+      }
+
+      this.navItems.forEach(navItem => {
+        if (navItem !== item) {
+          navItem.categories.forEach(category => {
+            category.isOpen = false;
+          });
+        }
+      });
+    }
+
+    toggleCategory(category: any) {
+      category.isOpen = !category.isOpen;
+    }
   // toggleCategory(category: any) {
   //   category.isOpen = !category.isOpen;
   // }
